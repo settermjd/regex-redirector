@@ -28,10 +28,13 @@ After initializing the object, pass the return value from `getRedirectUrl()` to 
 
 require_once('vendor/autoload.php');
 
-$redirectList = [];
-$requestUrl = '';  // the requested URL
+$redirectList = [
+    'configuration_server' => 'configuration/server'
+];
 
-$redirector = new RegexRedirector\RegexRedirector($redirectList, $requestUrl);
+$requestUrl = (isset($_SERVER['HTTPS']) ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+
+$redirector = new RegexRedirector\Redirector($redirectList, $requestUrl);
 
 if ($redirector->requiresRedirect()) {
     header(sprintf('Location: %s', $redirector->getRedirectUrl()));
